@@ -24,10 +24,12 @@
 
 require("../../config.php");
 require_once("$CFG->dirroot/enrol/evl/lib.php");
+require_once("../../blocks/escola_modelo/classes/httpful.phar");
 
 // Obtém parâmetros opcionais da URL
 $id = optional_param('id', 0, PARAM_INT); // id do curso
 $instanceid = optional_param('instanceid', 0, PARAM_INT); // id da instancia do enrol
+$key = optional_param('key', 0, PARAM_ALPHANUM); // chave do usuário (idnumber em {user})
 
 // Assegura que existe o curso em que usuário tentou se matricular
 if (!$course = $DB->get_record("course", array("id" => $id))) {
@@ -50,13 +52,11 @@ $context = context_course::instance($course->id);
 // Obtem nome do curso
 $fullname = format_string($course->fullname, true, array('context' => $context));
 
-// TODO: verificar que matrícula foi bem sucedida, por meio de chamada ao web service
-if( true /* matriculadoNaEvl() */) {
+if( matriculadoNaEvl($key, $course->id, 'ILB') ) { // FIXME obter código da escola
     // Matricula usuário na Escola Modelo
     $roleid = $DB->get_field('role', 'id', array('shortname' => 'student'));
     $enrol_plugin = enrol_get_plugin('evl');
     $enrol_instance = $DB->get_record('enrol', array('id' => $instanceid));
-    //$DB->get_record("enrol", array("id" => $instanceid, "status" => 0));
     $enrol_plugin->enrol_user($enrol_instance, $USER->id, $roleid);
 
     // Assegura que foi matriculado
@@ -76,4 +76,27 @@ if( true /* matriculadoNaEvl() */) {
     echo $OUTPUT->header();
     notice(get_string('enrol_error', 'enrol_evl'), $destination);
     echo $OUTPUT->footer();
+}
+
+/**
+ * Verifica se usuário está matriculado em determinado curso na EVL
+ */
+function matriculadoNaEvl($chaveUsuario, $curso, $escola) {
+    $uri = 'https://escolamodelows.interlegis.leg.br/cursos/confirmar';
+
+    $array = array( 
+        "key" => $chaveUsuario,
+        "school" => $escola,
+        "course" => $curso
+    );
+
+    // Monta o JSON que será enviado ao Web Service
+    $json = json_encode($array);
+
+    $response = \Httpful\Request::post($uri)
+        ->sendsJson()
+        ->body($json)
+        ->send();    
+
+    return ($response = 'S');
 }

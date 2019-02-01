@@ -42,6 +42,7 @@ $urlEnrol = new moodle_url('https://escolamodelows.interlegis.leg.br/cursos/regi
         array(
             'school' => 'ILB', // FIXME utilizar código da escola
             'school_course' => $courseid, 
+            'key' => $USER->$idnumber, 
             'redirect' => $urlRedirect
         )
     );
