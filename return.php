@@ -26,6 +26,8 @@ require("../../config.php");
 require_once("$CFG->dirroot/enrol/evl/lib.php");
 require_once("../../blocks/escola_modelo/classes/httpful.phar");
 
+global $DB;
+
 // Obtém parâmetros opcionais da URL
 $id = optional_param('id', 0, PARAM_INT); // id do curso
 $instanceid = optional_param('instanceid', 0, PARAM_INT); // id da instancia do enrol
@@ -57,6 +59,7 @@ if( matriculadoNaEvl($key, $course->id, 'ILB') ) { // FIXME obter código da esc
     $roleid = $DB->get_field('role', 'id', array('shortname' => 'student'));
     $enrol_plugin = enrol_get_plugin('evl');
     $enrol_instance = $DB->get_record('enrol', array('id' => $instanceid));
+    mtrace("INSTANCIA = " . $instanceid);
     $enrol_plugin->enrol_user($enrol_instance, $USER->id, $roleid);
 
     // Assegura que foi matriculado

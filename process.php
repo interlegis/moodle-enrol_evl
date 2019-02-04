@@ -27,6 +27,8 @@ require_once("lib.php");
 require_once($CFG->libdir.'/eventslib.php');
 require_once($CFG->libdir.'/enrollib.php');
 
+global $CFG;
+
 // Obtem ID da instância do método de inscrição
 $instanceid = optional_param('instanceid', 0, PARAM_INT);
 
@@ -40,10 +42,10 @@ $urlRedirect = new moodle_url('/enrol/evl/return.php', array('id' => $courseid, 
 // Monta url para matrícula
 $urlEnrol = new moodle_url('https://escolamodelows.interlegis.leg.br/cursos/registro', 
         array(
-            'school' => 'ILB', // FIXME utilizar código da escola
+            'school' => $CFG->emSigla,
             'school_course' => $courseid, 
             'key' => $USER->$idnumber, 
-            'redirect' => $urlRedirect
+            'redirect' => $urlRedirect->out(false) // false evita codificar '&' na url de redirecionamento
         )
     );
 redirect($urlEnrol);
