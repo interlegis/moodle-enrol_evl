@@ -59,7 +59,6 @@ if( matriculadoNaEvl($key, $course->id, 'ILB') ) { // FIXME obter código da esc
     $roleid = $DB->get_field('role', 'id', array('shortname' => 'student'));
     $enrol_plugin = enrol_get_plugin('evl');
     $enrol_instance = $DB->get_record('enrol', array('id' => $instanceid));
-    mtrace("INSTANCIA = " . $instanceid);
     $enrol_plugin->enrol_user($enrol_instance, $USER->id, $roleid);
 
     // Assegura que foi matriculado
@@ -85,7 +84,7 @@ if( matriculadoNaEvl($key, $course->id, 'ILB') ) { // FIXME obter código da esc
  * Verifica se usuário está matriculado em determinado curso na EVL
  */
 function matriculadoNaEvl($chaveUsuario, $curso, $escola) {
-    $uri = 'https://escolamodelows.interlegis.leg.br/cursos/confirmar';
+    $uri = $CFG->emURLEVL . '/cursos/confirmar';
 
     $array = array( 
         "key" => $chaveUsuario,
