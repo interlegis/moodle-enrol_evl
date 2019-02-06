@@ -40,7 +40,7 @@ $courseid = $plugin_instance->courseid;
 // Monta url para redirecionamento após matrícula
 $urlRedirect = new moodle_url('/enrol/evl/return.php', array('id' => $courseid, 'instanceid' => $instanceid));
 // Monta url para matrícula
-$urlEnrol = new moodle_url($CFG->emURLEVL . '/cursos/registro', 
+$urlEnrol = new moodle_url($CFG->emURLWS . '/cursos/registro', 
         array(
             'school' => $CFG->emSigla,
             'school_course' => $courseid, 

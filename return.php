@@ -84,7 +84,7 @@ if( matriculadoNaEvl($key, $course->id, 'ILB') ) { // FIXME obter código da esc
  * Verifica se usuário está matriculado em determinado curso na EVL
  */
 function matriculadoNaEvl($chaveUsuario, $curso, $escola) {
-    $uri = $CFG->emURLEVL . '/cursos/confirmar';
+    $uri = $CFG->emURLWS . '/cursos/confirmar';
 
     $array = array( 
         "key" => $chaveUsuario,
