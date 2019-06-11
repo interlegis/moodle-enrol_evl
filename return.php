@@ -24,7 +24,7 @@
 
 require("../../config.php");
 require_once("$CFG->dirroot/enrol/evl/lib.php");
-require_once("../../blocks/escola_modelo/classes/httpful.phar");
+require_once("../../blocks/escola_modelo/lib/httpful.phar");
 
 global $DB;
 
@@ -39,7 +39,7 @@ if (!$course = $DB->get_record("course", array("id" => $id))) {
 }
 
 // Assegura que usuário está logado
-require_login();
+require_login();    
 
 // Obtem url de redirecionamento, para acesso ao curso
 if (isset($SESSION->wantsurl)) {
@@ -84,7 +84,7 @@ if( matriculadoNaEvl($key, $course->id, 'ILB') ) { // FIXME obter código da esc
  * Verifica se usuário está matriculado em determinado curso na EVL
  */
 function matriculadoNaEvl($chaveUsuario, $curso, $escola) {
-    $uri = $CFG->emURLWS . '/cursos/confirmar';
+    $uri = new moodle_url($CFG->emURLWS . '/cursos/confirmar');
 
     $array = array( 
         "key" => $chaveUsuario,
