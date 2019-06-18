@@ -26,6 +26,7 @@ require('../../config.php');
 require_once("lib.php");
 require_once($CFG->libdir.'/eventslib.php');
 require_once($CFG->libdir.'/enrollib.php');
+require_once("../../blocks/escola_modelo/classes/util.php");
 
 global $CFG;
 
@@ -40,9 +41,9 @@ $courseid = $plugin_instance->courseid;
 // Monta url para redirecionamento após matrícula
 $urlRedirect = new moodle_url('/enrol/evl/return.php', array('id' => $courseid, 'instanceid' => $instanceid));
 // Monta url para matrícula
-$urlEnrol = new moodle_url($CFG->emURLWS . '/cursos/registro', 
+$urlEnrol = new moodle_url(evlURLWebServices() . '/cursos/registro', 
         array(
-            'school' => $CFG->emSigla,
+            'school' => evlSiglaEscola(),
             'school_course' => $courseid, 
             'key' => $USER->$idnumber, 
             'redirect' => $urlRedirect->out(false) // false evita codificar '&' na url de redirecionamento
