@@ -24,7 +24,7 @@
 
 require('../../config.php');
 require_once("lib.php");
-require_once($CFG->libdir.'/eventslib.php');
+// require_once($CFG->libdir.'/eventslib.php');
 require_once($CFG->libdir.'/enrollib.php');
 require_once("../../blocks/escola_modelo/classes/util.php");
 

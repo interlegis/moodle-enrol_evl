@@ -55,23 +55,29 @@ $context = context_course::instance($course->id);
 // Obtem nome do curso
 $fullname = format_string($course->fullname, true, array('context' => $context));
 
-if( matriculadoNaEvl($key, $course->id, 'ILB') ) { // FIXME obter código da escola
-    // Matricula usuário na Escola Modelo
-    $roleid = $DB->get_field('role', 'id', array('shortname' => 'student'));
-    $enrol_plugin = enrol_get_plugin('evl');
-    $enrol_instance = $DB->get_record('enrol', array('id' => $instanceid));
-    $enrol_plugin->enrol_user($enrol_instance, $USER->id, $roleid);
-
+if( matriculadoNaEvl($key, $course->id, evlSiglaEscola()) ) {
+    
     // Assegura que foi matriculado
-    if (is_enrolled($context, null, '', true) || true) { 
+    if (is_enrolled($context, null, '', true)) { 
         // Redireciona usuário para página do curso
-        redirect($destination, get_string('enrol_success', 'enrol_evl', $fullname));
+        redirect($destination);
     } else {
-        $PAGE->set_context($context);
-        $PAGE->set_url($destination);
-        echo $OUTPUT->header();
-        notice(get_string('enrol_error', 'enrol_evl'), $destination);
-        echo $OUTPUT->footer();
+        // Matricula usuário na Escola Modelo
+        $roleid = $DB->get_field('role', 'id', array('shortname' => 'student'));
+        $enrol_plugin = enrol_get_plugin('evl');
+        $enrol_instance = $DB->get_record('enrol', array('id' => $instanceid));
+        $enrol_plugin->enrol_user($enrol_instance, $USER->id, $roleid);
+
+        if(is_enrolled($context, null, '', true)) {
+            // Redireciona usuário para página do curso
+            redirect($destination, get_string('enrol_success', 'enrol_evl', $fullname));
+        } else {
+            $PAGE->set_context($context);
+            $PAGE->set_url($destination);
+            echo $OUTPUT->header();
+            notice(get_string('enrol_error', 'enrol_evl'), $destination);
+            echo $OUTPUT->footer();
+        }
     } 
 } else {
     $PAGE->set_context($context);
