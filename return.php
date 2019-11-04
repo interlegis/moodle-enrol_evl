@@ -20,19 +20,32 @@
  * @package    enrol_evl
  * @author     Interlegis
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * 
+ * Este arquivo pode ser chamado:
+ * - 1) normalmente, a partir de redirect após inscrição na EVL
+ * - 2) diretamente via URL
+ * 
+ * O acesso direto pela URL é impedido por meio de parâmetros obrigatórios.
+ * 
+ * O acesso normal, via redirect, deve tratar situações:
+ * - o usuário já tinha cadastro preenchido e estava matriculado
+ * - o usuário preencheu o cadastro e foi matriculado com sucesso
+ * - o usuário preencheu o cadastro mas não foi matriculado
+ * - o usuário já tinha cadastro preenchido
+ * 
  */
 
 require("../../config.php");
 require_once("$CFG->dirroot/enrol/evl/lib.php");
 require_once("../../blocks/escola_modelo/lib/httpful.phar");
 require_once("../../blocks/escola_modelo/classes/util.php");
-
+    
 global $DB;
 
 // Obtém parâmetros opcionais da URL
-$id = optional_param('id', 0, PARAM_INT); // id do curso
-$instanceid = optional_param('instanceid', 0, PARAM_INT); // id da instancia do enrol
-$key = optional_param('key', 0, PARAM_ALPHANUM); // chave do usuário (idnumber em {user})
+$id = required_param('id', 0, PARAM_INT); // id do curso
+$instanceid = required_param('instanceid', 0, PARAM_INT); // id da instancia do enrol
+$key = required_param('key', 0, PARAM_ALPHANUM); // chave do usuário (idnumber em {user})
 
 // Assegura que existe o curso em que usuário tentou se matricular
 if (!$course = $DB->get_record("course", array("id" => $id))) {
